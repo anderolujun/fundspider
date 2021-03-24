@@ -72,7 +72,6 @@ class CwzbSpider(scrapy.Spider):
             while i <= arr_length:
                 if fund_arr[i] == "]":
                     fundstr = ""
-                    print("--==========")
                     # 遇到]就开始把栈里的元素弹出，直到遇到[就停止弹出。
                     while stack.peek() != "[":
                         ele = stack.peek()
@@ -85,11 +84,10 @@ class CwzbSpider(scrapy.Spider):
                     arr = fundstr.split(",")
                     # 截取arr[0]基金编号
                     fundcode = arr[0][arr[0].find("\"") + 1:arr[0].rfind("\"")]
-                    self.process.crawl('fundspider', domain='eastmoney.com', fundcode=fundcode)
-                    self.process.crawl('fundprofit', domain='eastmoney.com', fundcode=fundcode)
-                    self.process.crawl('assetliabequity', domain='eastmoney.com', fundcode=fundcode)
+                    yield self.process.crawl('fundspider', domain='eastmoney.com', fundcode=fundcode)
+                    yield self.process.crawl('fundprofit', domain='eastmoney.com', fundcode=fundcode)
+                    yield self.process.crawl('assetliabequity', domain='eastmoney.com', fundcode=fundcode)
                     # self.process.start()  # the script will block here until the crawling is finished
-                    # logging.debug(fundcode)
                 else:
                     stack.push(fund_arr[i])
                 i = i + 1
